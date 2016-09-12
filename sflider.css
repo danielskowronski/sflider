@@ -1,0 +1,23 @@
+.sflider-slide{
+  display: inline-block;
+  width: 100%;
+  margin: 0 !important;
+  font-size: 32px;
+}
+.sflider-slides {
+  position: relative;
+  font-size: 0; /* this one is important */
+}
+
+.control-key{
+  background: #424242 ;
+  color: white;
+  width:20px !important;
+  max-width: 3vw;
+  position: absolute;
+  z-index: 999;
+  margin-top: 0;
+  display: block;
+}
+#prev-key { left:  0 }
+#next-key { right: 0 }

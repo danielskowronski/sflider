@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>sflider - example 01</title>
+</head>
+<body>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="../sflider.js"></script>
+<link rel="stylesheet" type="text/css" href="../sflider.css">
+<script>
+  var sfliderConfig = {
+    height: "200px",
+    timeout: 1000 /* ms */
+  }
+  $(function() {
+    _invokeSflider(sfliderConfig, $("#sflider"));
+  });
+</script>
+<style>
+</style>
+
+<h1>sflider - example 01</h1>
+just try adding/removing slides:
+<pre>&lt;div class="sflider-slide" style="background: yellow">&lt;h3>yellow slide&lt;/h3>&lt;/div></pre>
+<hr />
+
+<style>/* example */h3 { padding-left: 50px;}</style>
+<div id="sflider" class="sflider-container">
+  <div id="prev-key" class="control-key" onClick="_moveSflider(-1, true)">&lt;</div>
+  <div id="next-key" class="control-key" onClick="_moveSflider(+1, true)">&gt;</div>
+
+  <div class="sflider-slides">
+    <div class="sflider-slide" style="background: yellow"><h3>yellow slide</h3></div>
+    <div class="sflider-slide" style="background: red"><h3>red slide</h3></div>
+    <div class="sflider-slide" style="background: blue"><h3>blue slide</h3></div>
+    <div class="sflider-slide" style="background: green"><h3>green slide</h3></div>
+    <div class="sflider-slide" style="background: gray"><h3>gray slide</h3></div>
+    <div class="sflider-slide" style="background: gold"><h3>gold slide</h3></div>
+  </div>
+</div>
+
+
+</body>
+</html>
