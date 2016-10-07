@@ -20,12 +20,14 @@ function setSfliderTimer(){
   _sfliderState.sliderTimer = setTimeout( "_moveSflider(+1)", _sfliderState.config.timeout );
 }
 
-function _invokeSflider(config, obj){
+function _invokeSflider(config, obj, doNotFixHeight=false){
   _sfliderState.config = config;
   _sfliderState.obj    = obj;
 
   _sfliderState.slidesCount =
     $(_sfliderState.obj).children(".sflider-slides").children(".sflider-slide").length;
+
+  if (doNotFixHeight) return;
 
   fixHeight(
     $(_sfliderState.obj),
