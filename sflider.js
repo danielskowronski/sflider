@@ -15,6 +15,11 @@ function fixHeight(obj, value){
 function mod(n, m) {
   return ((n % m) + m) % m; /* why would JS has modulo working properly with negative numbers? */
 }
+function modRange(x, min, max){
+  var r = mod(x, max);
+  if (r==0) r=1;
+  return r;
+}
 function setSfliderTimer(){
   clearTimeout(_sfliderState.sliderTimer);
   _sfliderState.sliderTimer = setTimeout( "_moveSflider(+1)", _sfliderState.config.timeout );
@@ -27,9 +32,15 @@ function _invokeSflider(config, obj, doNotFixHeight=false){
   _sfliderState.slidesCount =
     $(_sfliderState.obj).children(".sflider-slides").children(".sflider-slide").length;
 
-  if (doNotFixHeight) return;
+  //dup overlap slide
+  var first = $($(_sfliderState.obj).children(".sflider-slides").children()[0]).clone()
+  $(first).prop("id","dupFirst").appendTo($(_sfliderState.obj).children(".sflider-slides"))
+  _sfliderState.slidesCount++;
+  var preLast = $($(_sfliderState.obj).children(".sflider-slides").children()[$($(_sfliderState.obj).children(".sflider-slides").children()).length-2]).clone()
+  $(preLast).prop("id","dupPreLast").prependTo($(_sfliderState.obj).children(".sflider-slides"))
+  _sfliderState.slidesCount++;
 
-  fixHeight(
+  if (!doNotFixHeight) fixHeight(
     $(_sfliderState.obj),
     _sfliderState.config.height
   );
@@ -41,11 +52,11 @@ function _invokeSflider(config, obj, doNotFixHeight=false){
     "width",
     (100/_sfliderState.slidesCount)+"%"
   );
-  fixHeight(
+  if (!doNotFixHeight) fixHeight(
     $(obj).children(".control-key"),
     _sfliderState.config.height
   );
-  fixHeight(
+  if (!doNotFixHeight) fixHeight(
     $(obj).children(".sflider-slides").children(".sflider-slide"),
     _sfliderState.config.height
   );
@@ -58,17 +69,45 @@ function _invokeSflider(config, obj, doNotFixHeight=false){
       _sfliderState.slideChangeAllowed=true;
   });
 
+  //dup overlap slid - preLast
+  _sfliderState.currentSlideId=1;
+  $(_sfliderState.obj).children(".sflider-slides").css("left", currPercOffset());
+
   setSfliderTimer();
 }
-
+function currPercOffset(){
+  return "-"+(_sfliderState.currentSlideId*(100/_sfliderState.slidesCount))+"%"
+}
 function _moveSflider(offset, force){
-  if (_sfliderState.slideChangeAllowed || force){
-    _sfliderState.currentSlideId =
-      mod(_sfliderState.currentSlideId+offset, _sfliderState.slidesCount);
 
+  if (_sfliderState.slideChangeAllowed || force){
+
+    _sfliderState.currentSlideId =
+      modRange(_sfliderState.currentSlideId+offset, 1, _sfliderState.slidesCount);
+
+      if (offset<0) console.log(_sfliderState.currentSlideId)
     $(_sfliderState.obj).children(".sflider-slides")
-      .animate({left: "-"+(_sfliderState.currentSlideId*(100/_sfliderState.slidesCount))+"%"});
+      .animate(
+        {left: currPercOffset()},
+        500,
+        function(){
+          //dup overlap slide ->
+          if (offset>0 && _sfliderState.currentSlideId == _sfliderState.slidesCount-2) {
+            _sfliderState.currentSlideId = 0;
+            $(_sfliderState.obj).children(".sflider-slides").css("left", currPercOffset());
+          }
+          //dup overlap slide <-
+          if (offset<0 && _sfliderState.currentSlideId == 1) {
+            _sfliderState.currentSlideId = _sfliderState.slidesCount-1;
+            $(_sfliderState.obj).children(".sflider-slides").css("left", currPercOffset());
+          }
+        }
+      );
+
+
+
   }
+
 
   setSfliderTimer();
 }
