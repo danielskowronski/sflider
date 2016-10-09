@@ -85,7 +85,6 @@ function _moveSflider(offset, force){
     _sfliderState.currentSlideId =
       modRange(_sfliderState.currentSlideId+offset, 1, _sfliderState.slidesCount);
 
-      if (offset<0) console.log(_sfliderState.currentSlideId)
     $(_sfliderState.obj).children(".sflider-slides")
       .animate(
         {left: currPercOffset()},
